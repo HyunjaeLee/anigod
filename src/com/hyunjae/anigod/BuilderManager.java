@@ -11,7 +11,7 @@ public class BuilderManager {
 
     public BuilderManager() {
     }
-
+    
     public void build() throws Exception {
         List<Series> indexList = builder.buildIndex();
         seriesList.addAll(indexList);

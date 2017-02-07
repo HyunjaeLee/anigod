@@ -10,7 +10,7 @@ import java.util.concurrent.Future;
 public class Builder {
 
     private ExecutorService executorService = Executors.newFixedThreadPool(64);
-    private BackoffParser parser = new BackoffParser();
+    private Parser parser = new BackoffParser();
 
     public Builder() {
     }
@@ -75,14 +75,14 @@ public class Builder {
 
         episodeList.forEach(episode -> {
             Future future = executorService.submit(() -> {
-                        try {
-                            episode.setVideoUrl(
-                                    parser.getRedirectedUrl(parser.parseVideoUrl(episode.getId()))
-                            );
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                try {
+                    String videoUrl = parser.parseVideoUrl(episode.getId());
+                    String redirectedVideoUrl = parser.getRedirectedUrl(videoUrl);
+                    episode.setVideoUrl(redirectedVideoUrl);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             );
             futures.add(future);
         });
